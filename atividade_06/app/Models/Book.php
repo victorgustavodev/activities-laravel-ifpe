@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,18 +11,11 @@ class Book extends Model
     protected $fillable = ['title', 'author_id', 'category_id', 'publisher_id', 'published_year'];
 
     public function users()
-{
-    return $this->belongsToMany(User::class, 'borrowings')
-                ->withPivot('id', 'borrowed_at', 'returned_at')
-                ->withTimestamps();
-}
-
-public function books()
-{
-    return $this->belongsToMany(Book::class, 'borrowings')
-                ->withPivot('id', 'borrowed_at', 'returned_at')
-                ->withTimestamps();
-}
+    {
+        return $this->belongsToMany(User::class, 'borrowings')
+            ->withPivot('id', 'borrowed_at', 'returned_at')
+            ->withTimestamps();
+    }
 
     public function author()
     {
@@ -39,12 +31,5 @@ public function books()
     {
         return $this->belongsTo(Publisher::class);
     }
-
-    public function users()
-{
-    return $this->belongsToMany(User::class, 'borrowings')
-                ->withPivot('borrowed_at', 'returned_at')
-                ->withTimestamps();
-}
 
 }

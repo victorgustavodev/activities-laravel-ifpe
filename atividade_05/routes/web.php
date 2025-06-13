@@ -1,8 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\AuthorController;
 
 // Rotas para criação de livros
 Route::get('/books/create-id-number', [BookController::class, 'createWithId'])->name('books.create.id');
@@ -15,7 +17,7 @@ Route::post('/books/create-select', [BookController::class, 'storeWithSelect'])-
 Route::resource('books', BookController::class)->except(['create', 'store']);
 
 Route::resource('categories', CategoryController::class);
-
+Route::resource('authors', AuthorController::class);
 
 Route::get('/', function () {
     return view('welcome');

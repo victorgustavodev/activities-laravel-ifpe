@@ -54,7 +54,6 @@
 
 
         @if (Route::has('login'))
-            <div class="h-14.5 hidden lg:block">Olá estou logado</div>
             <a class="" href="/home">Acessar página home</a><br>
             <a href="">Deslogar</a>
         @endif
