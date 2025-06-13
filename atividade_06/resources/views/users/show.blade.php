@@ -12,13 +12,9 @@
             <p><strong>Email:</strong> {{ $user->email }}</p>
         </div>
     </div>
+    <!-- Histórico de Empréstimos -->
+<br><br>
 
-    <a href="{{ route('users.index') }}" class="btn btn-secondary mt-3">
-        <i class="bi bi-arrow-left"></i> Voltar
-    </a>
-</div>
-
-<!-- Histórico de Empréstimos -->
 <div class="card">
     <div class="card-header">Histórico de Empréstimos</div>
     <div class="card-body">
@@ -62,5 +58,11 @@
         @endif
     </div>
 </div>
+    <a href="{{ route('users.index') }}" class="btn btn-secondary mt-3">
+        <i class="bi bi-arrow-left"></i> Voltar
+    </a>
+</div>
+
+
 
 @endsection

@@ -16,3 +16,4 @@ class Publisher extends Model
         return $this->hasMany(Book::class);
     }
 }
+

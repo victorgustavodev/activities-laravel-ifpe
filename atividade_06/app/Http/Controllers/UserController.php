@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Http\Controllers;
 
@@ -30,4 +30,14 @@ class UserController extends Controller
         return redirect()->route('users.index')->with('success', 'Usuário atualizado com sucesso.');
     }
 
+    public function destroy(\App\Models\User $user)
+    {
+        $user->delete();
+
+        return redirect()->route('users.index')->with('success', 'Usuário excluído com sucesso.');
+    }
+
+    
 }
+
+

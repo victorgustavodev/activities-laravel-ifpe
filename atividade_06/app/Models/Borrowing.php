@@ -25,4 +25,3 @@ class Borrowing extends Model
     }
 }
 
-
