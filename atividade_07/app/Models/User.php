@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -43,14 +42,29 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'password'          => 'hashed',
         ];
     }
-   public function books()
-{
-    return $this->belongsToMany(Book::class, 'borrowings')
-                ->withPivot('id', 'borrowed_at', 'returned_at')
-                ->withTimestamps();
-}
+    public function books()
+    {
+        return $this->belongsToMany(Book::class, 'borrowings')
+            ->withPivot('id', 'borrowed_at', 'returned_at')
+            ->withTimestamps();
+    }
+
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isBibliotecario()
+    {
+        return $this->role === 'bibliotecario';
+    }
+
+    public function isCliente()
+    {
+        return $this->role === 'cliente';
+    }
 
 }
