@@ -86,24 +86,31 @@ class BookController extends Controller
 
     }
 
-    public function update(Request $request, Book $book)
-    {
+    public function update(Request $request, Book $book){
         $request->validate([
             'title'        => 'required|string|max:255',
             'publisher_id' => 'required|exists:publishers,id',
             'author_id'    => 'required|exists:authors,id',
             'category_id'  => 'required|exists:categories,id',
-            'image_url'    => 'nullable|image', // Agora é opcional
+            'image_url'    => 'nullable|image',
         ]);
     
         $data = $request->all();
+    
+        // Remover imagem se o checkbox foi marcado
+        if ($request->has('remove_image') && $book->image_url) {
+            if (Storage::disk('public')->exists($book->image_url)) {
+                Storage::disk('public')->delete($book->image_url);
+            }
+            $data['image_url'] = null; // ou 'defaults/default-book.png' se quiser uma imagem padrão
+        }
     
         // Se uma nova imagem foi enviada, faz o upload e atualiza o caminho
         if ($request->hasFile('image_url')) {
             $imagePath = $request->file('image_url')->store('books', 'public');
             $data['image_url'] = $imagePath;
-        } else {
-            // Mantém a imagem antiga se não foi enviada uma nova
+        } elseif (!$request->has('remove_image')) {
+            // Mantém a imagem antiga se não foi enviada uma nova e não marcou para remover
             $data['image_url'] = $book->image_url;
         }
     
@@ -112,8 +119,7 @@ class BookController extends Controller
         return redirect()->route('books.index')->with('success', 'Livro atualizado com sucesso.');
     }
 
-    public function show(Book $book)
-    {
+    public function show(Book $book){
         // Carregando autor, editora e categoria do livro com eager loading
         $book->load(['author', 'publisher', 'category']);
 
@@ -123,8 +129,7 @@ class BookController extends Controller
         return view('books.show', compact('book', 'users'));
     }
 
-    public function edit(Book $book)
-    {
+    public function edit(Book $book){
         $publishers = Publisher::all();
         $authors    = Author::all();
         $categories = Category::all();
@@ -132,14 +137,14 @@ class BookController extends Controller
         return view('books.edit', compact('book', 'publishers', 'authors', 'categories'));
     }
 
-    public function destroy(Book $book)
-    {
-        if ($book->cover && Storage::disk('public')->exists($book->cover)) {
-            Storage::disk('public')->delete($book->cover);
-        }
-
-        $book->delete();
-
-        return redirect()->route('books.index')->with('success', 'Livro deletado com sucesso.');
+    public function destroy(Book $book){
+    // Se houver imagem e ela não for a padrão, deleta do storage
+    if ($book->image_url && Storage::disk('public')->exists($book->image_url)) {
+        Storage::disk('public')->delete($book->image_url);
     }
+
+    $book->delete();
+
+    return redirect()->route('books.index')->with('success', 'Livro deletado com sucesso.');
+}
 }

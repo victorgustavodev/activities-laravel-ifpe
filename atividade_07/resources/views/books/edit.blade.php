@@ -70,6 +70,12 @@
 
         <div class="mb-3">
         <label for="image_url" class="form-label">Imagem do Livro</label>
+        <div class="form-check mt-2">
+    <input class="form-check-input" type="checkbox" name="remove_image" id="remove_image" value="1">
+    <label class="form-check-label" for="remove_image">
+        Remover imagem atual
+    </label>
+</div>
         @if ($book->image_url)
             <div class="mt-2">
                 <img src="{{ asset('storage/' . $book->image_url) }}" alt="Imagem atual" style="width: 150px;">
@@ -77,9 +83,9 @@
         @endif
         <br>
         <input type="file" class="form-control" id="image_url" name="image_url" accept="image/*">
-        
+
     </div>
-            
+
     <div>
         <button type="submit" class="btn btn-success">Atualizar</button>
         <a href="{{ route('books.index') }}" class="btn btn-secondary">Cancelar</a>
