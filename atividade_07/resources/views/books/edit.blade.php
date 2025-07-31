@@ -4,7 +4,7 @@
 <div class="container">
     <h1 class="my-4">Editar Livro</h1>
 
-    <form action="{{ route('books.update', $book) }}" method="POST" enctype="multipart/form-data>
+   <form action="{{ route('books.update', $book->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <div class="mb-3">
@@ -68,19 +68,22 @@
             @enderror
         </div>
 
-        <div class="flex flex-col">
-        <figure class="figure">
-            <img  
-            src="{{ asset('storage/' . ($book->image_url ?? 'storage/defaults/default-book.png')) }}"
-             class="figure-img img-fluid rounded" style="width:200px;" alt="...">
-            
-        </figure>
-            
-            <div>
-                <button type="submit" class="btn btn-success">Atualizar</button>
-                <a href="{{ route('books.index') }}" class="btn btn-secondary">Cancelar</a>
+        <div class="mb-3">
+        <label for="image_url" class="form-label">Imagem do Livro</label>
+        @if ($book->image_url)
+            <div class="mt-2">
+                <img src="{{ asset('storage/' . $book->image_url) }}" alt="Imagem atual" style="width: 150px;">
             </div>
-        </div>
+        @endif
+        <br>
+        <input type="file" class="form-control" id="image_url" name="image_url" accept="image/*">
+        
+    </div>
+            
+    <div>
+        <button type="submit" class="btn btn-success">Atualizar</button>
+        <a href="{{ route('books.index') }}" class="btn btn-secondary">Cancelar</a>
+    </div>
     </form>
 </div>
 @endsection

@@ -5,8 +5,8 @@ use App\Models\Author;
 use App\Models\Book;
 use App\Models\Category;
 use App\Models\Publisher;
-use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class BookController extends Controller
@@ -16,6 +16,65 @@ class BookController extends Controller
     public function createWithId()
     {
         return view('books.create-id');
+    }
+    // Cria um livro com id
+    public function storeWithId(Request $request)
+    {
+        $request->validate([
+            'title'        => 'required|string|max:255',
+            'publisher_id' => 'required|exists:publishers,id',
+            'author_id'    => 'required|exists:authors,id',
+            'category_id'  => 'required|exists:categories,id',
+            'image_url'    => 'nullable|image|max:2048', // imagem agora é opcional
+        ]);
+
+        $data = $request->all();
+
+        if ($request->hasFile('image_url')) {
+            $imagePath         = $request->file('image_url')->store('books', 'public');
+            $data['image_url'] = $imagePath;
+        } else {
+            $data['image_url'] = 'defaults/default-book.png';
+        }
+
+        Book::create($data);
+
+        return redirect()->route('books.index')->with('success', 'Livro criado com sucesso.');
+    }
+    // Formulário com input select
+    public function createWithSelect()
+    {
+        $publishers = Publisher::all();
+        $authors    = Author::all();
+        $categories = Category::all();
+
+        return view('books.create-select', compact('publishers', 'authors', 'categories'));
+    }
+
+    // Cria um livro com input-select
+    public function storeWithSelect(Request $request)
+    {
+        $request->validate([
+            'title'        => 'required|string|max:255',
+            'publisher_id' => 'required|exists:publishers,id',
+            'author_id'    => 'required|exists:authors,id',
+            'category_id'  => 'required|exists:categories,id',
+            'image_url'    => 'nullable|image|max:2048',
+        ]);
+
+        $data = $request->all();
+
+        // Trata o upload da imagem
+        if ($request->hasFile('image_url')) {
+            $path              = $request->file('image_url')->store('books', 'public');
+            $data['image_url'] = $path; // Salva só o caminho relativo
+        } else {
+            // Se não enviar imagem, salva o caminho padrão
+            $data['image_url'] = 'defaults/default-book.png';
+        }
+
+        Book::create($data);
+        return redirect()->route('books.index')->with('success', 'Livro criado com sucesso.');
     }
 
     public function index()
@@ -34,11 +93,22 @@ class BookController extends Controller
             'publisher_id' => 'required|exists:publishers,id',
             'author_id'    => 'required|exists:authors,id',
             'category_id'  => 'required|exists:categories,id',
-            'image_url'   => 'required|image' 
+            'image_url'    => 'nullable|image', // Agora é opcional
         ]);
-
-        $book->update($request->all());
-
+    
+        $data = $request->all();
+    
+        // Se uma nova imagem foi enviada, faz o upload e atualiza o caminho
+        if ($request->hasFile('image_url')) {
+            $imagePath = $request->file('image_url')->store('books', 'public');
+            $data['image_url'] = $imagePath;
+        } else {
+            // Mantém a imagem antiga se não foi enviada uma nova
+            $data['image_url'] = $book->image_url;
+        }
+    
+        $book->update($data);
+    
         return redirect()->route('books.index')->with('success', 'Livro atualizado com sucesso.');
     }
 
@@ -50,7 +120,7 @@ class BookController extends Controller
         // Carregar todos os usuários para o formulário de empréstimo
         $users = User::all();
 
-        return view('books.show', compact('book','users'));
+        return view('books.show', compact('book', 'users'));
     }
 
     public function edit(Book $book)
@@ -61,83 +131,6 @@ class BookController extends Controller
 
         return view('books.edit', compact('book', 'publishers', 'authors', 'categories'));
     }
-    // Salvar livro com input de ID
-    public function storeWithId(Request $request)
-{
-    $request->validate([
-        'title'        => 'required|string|max:255',
-        'publisher_id' => 'required|exists:publishers,id',
-        'author_id'    => 'required|exists:authors,id',
-        'category_id'  => 'required|exists:categories,id',
-        'image_url' => 'nullable|image|max:2048', // imagem agora é opcional
-    ]);
-
-    $data = $request->all();
-
-    if ($request->hasFile('image_url')) {
-        $imagePath = $request->file('image_url')->store('books', 'public');
-        $data['image_url'] = $imagePath;
-    } else {
-        $data['image_url'] = 'defaults/default-book.png';
-    }
-
-    Book::create($data);
-
-    return redirect()->route('books.index')->with('success', 'Livro criado com sucesso.');
-}
-
-    // Formulário com input select
-    public function createWithSelect()
-    {
-        $publishers = Publisher::all();
-        $authors    = Author::all();
-        $categories = Category::all();
-
-        return view('books.create-select', compact('publishers', 'authors', 'categories'));
-    }
-
-    // Salvar livro com input select
-    // public function storeWithSelect(Request $request)
-    // {
-    //     $request->validate([
-    //         'title'        => 'required|string|max:255',
-    //         'publisher_id' => 'required|exists:publishers,id',
-    //         'author_id'    => 'required|exists:authors,id',
-    //         'category_id'  => 'required|exists:categories,id',
-    //         'image_url' => 'nullable|image|max:2048',
-    //     ]);
-        
-    //     Book::create($request->all());
-        
-    //     return redirect()->route('books.index')->with('success', 'Livro criado com sucesso.');
-        
-        
-    // }
-
-    public function storeWithSelect(Request $request)
-{
-    $request->validate([
-        'title'        => 'required|string|max:255',
-        'publisher_id' => 'required|exists:publishers,id',
-        'author_id'    => 'required|exists:authors,id',
-        'category_id'  => 'required|exists:categories,id',
-        'image_url'    => 'nullable|image|max:2048',
-    ]);
-
-    $data = $request->all();
-
-    // Trata o upload da imagem
-    if ($request->hasFile('image_url')) {
-        $path = $request->file('image_url')->store('books', 'public');
-        $data['image_url'] = $path; // Salva só o caminho relativo
-    } else {
-        // Se não enviar imagem, salva o caminho padrão
-        $data['image_url'] = 'defaults/default-book.png';
-    }
-
-    Book::create($data);
-    return redirect()->route('books.index')->with('success', 'Livro criado com sucesso.');
-}
 
     public function destroy(Book $book)
     {
