@@ -4,6 +4,20 @@
 <div class="container">
     <h1 class="my-4">Detalhes do Livro</h1>
 
+    {{-- Verifica primeiro se a coluna image_url não é nula ou vazia --}}
+@if($book->image_url)
+    <div class="mb-4">
+        {{-- Agora, verifica se é a imagem padrão ou uma imagem de upload --}}
+        @if($book->image_url == 'images/default.jpg')
+            {{-- CASO 1: É a imagem padrão. O caminho já é relativo à pasta 'public'. --}}
+            <img src="{{ asset($book->image_url) }}" alt="Capa Padrão" class="img-fluid" style="width: 200px;">
+        @else
+            {{-- CASO 2: É uma imagem de upload. Precisamos adicionar o prefixo 'storage/'. --}}
+            <img src="{{ asset('storage/' . $book->image_url) }}" alt="Capa do Livro" class="img-fluid" style="width: 200px;">
+        @endif
+    </div>
+@endif
+
     <!-- Formulário para Empréstimos -->
 <div class="card mb-4">
     <div class="card-header">Registrar Empréstimo</div>

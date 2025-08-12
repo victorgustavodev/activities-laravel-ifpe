@@ -19,7 +19,7 @@ class BookFactory extends Factory
             'category_id' => Category::factory(), // Agora usa a CategoryFactory
             'publisher_id' => Publisher::factory(),
             'published_year' => $this->faker->year,
-            'image_url' => 'defaults/default-book.png'
+            'image_url' => 'images/default.jpg'
         ];
     }
 }

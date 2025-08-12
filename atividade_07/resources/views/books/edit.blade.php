@@ -76,11 +76,19 @@
         Remover imagem atual
     </label>
 </div>
-        @if ($book->image_url)
-            <div class="mt-2">
-                <img src="{{ asset('storage/' . $book->image_url) }}" alt="Imagem atual" style="width: 150px;">
-            </div>
+{{-- Verifica primeiro se a coluna image_url não é nula ou vazia --}}
+@if($book->image_url)
+    <div class="mb-4">
+        {{-- Agora, verifica se é a imagem padrão ou uma imagem de upload --}}
+        @if($book->image_url == 'images/default.jpg' || '')
+            {{-- CASO 1: É a imagem padrão. O caminho já é relativo à pasta 'public'. --}}
+            <img src="{{ asset($book->image_url) }}" alt="Capa Padrão" class="img-fluid" style="width: 200px;">
+        @else
+            {{-- CASO 2: É uma imagem de upload. Precisamos adicionar o prefixo 'storage/'. --}}
+            <img src="{{ asset('storage/' . $book->image_url) }}" alt="Capa do Livro" class="img-fluid" style="width: 200px;">
         @endif
+    </div>
+@endif
         <br>
         <input type="file" class="form-control" id="image_url" name="image_url" accept="image/*">
 
