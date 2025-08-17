@@ -1,12 +1,11 @@
 <?php
-
 namespace Database\Factories;
 
+use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Book;
 use App\Models\Author;
 use App\Models\Category;
 use App\Models\Publisher;
-use Illuminate\Database\Eloquent\Factories\Factory;
 
 class BookFactory extends Factory
 {
@@ -15,9 +14,9 @@ class BookFactory extends Factory
     public function definition()
     {
         return [
-            'title' => $this->faker->sentence(),
+            'title' => $this->faker->words(3, true), // título com 3 palavras
             'author_id' => Author::factory(),
-            'category_id' => Category::factory(), 
+            'category_id' => Category::factory(),
             'publisher_id' => Publisher::factory(),
             'published_year' => $this->faker->year,
         ];

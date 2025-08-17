@@ -6,18 +6,24 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateAuthorsTable extends Migration
 {
-    public function up()
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
     {
         Schema::create('authors', function (Blueprint $table) {
-            $table->id(); 
-            $table->string('name'); 
-            $table->date('birth_date')->nullable(); 
+            $table->id();
+            $table->string('name');
+            $table->date('birth_date')->nullable();
             $table->timestamps();
         });
     }
 
-    public function down()
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
     {
         Schema::dropIfExists('authors');
     }
-}
+};

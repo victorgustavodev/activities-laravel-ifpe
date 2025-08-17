@@ -3,25 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\Author;
-use App\Models\Category;
 use Illuminate\Http\Request;
 
-class AuthorsController extends Controller
+class AuthorController extends Controller
 {
-    // Exibe uma lista de categorias
     public function index()
     {
         $authors = Author::all();
         return view('authors.index', compact('authors'));
     }
 
-    // Mostra o formulário para criar uma nova categoria
     public function create()
     {
         return view('authors.create');
     }
 
-    // Armazena uma nova categoria no banco de dados
     public function store(Request $request)
     {
         $request->validate([
@@ -33,21 +29,16 @@ class AuthorsController extends Controller
         return redirect()->route('authors.index')->with('success', 'Autor criado com sucesso.');
     }
 
-    // Exibe uma categoria específica
     public function show(Author $author)
     {
         return view('authors.show', compact('author'));
     }
 
-    // Mostra o formulário para editar uma categoria existente
     public function edit(Author $author)
     {
-        $category = Category::all();
-        return view('authors.edit', compact('author', 'category'));
+        return view('authors.edit', compact('author'));
     }
-    
 
-    // Atualiza uma categoria no banco de dados
     public function update(Request $request, Author $author)
     {
         $request->validate([
@@ -59,7 +50,6 @@ class AuthorsController extends Controller
         return redirect()->route('authors.index')->with('success', 'Autor atualizado com sucesso.');
     }
 
-    // Remove uma categoria do banco de dados
     public function destroy(Author $author)
     {
         $author->delete();

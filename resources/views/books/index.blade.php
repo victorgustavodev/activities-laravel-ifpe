@@ -10,33 +10,18 @@
         </div>
     @endif
 
-    @can('create', App\Models\Book::class)
-    <a href="#" class="btn btn-success mb-3">
+    <a href="{{ route('books.create.id') }}" class="btn btn-success mb-3">
         <i class="bi bi-plus"></i> Adicionar Livro (Com ID)
     </a>
     <a href="{{ route('books.create.select') }}" class="btn btn-primary mb-3">
         <i class="bi bi-plus"></i> Adicionar Livro (Com Select)
     </a>
-@else
-    <button onclick="showUnauthorized()" class="btn btn-success mb-3">
-        <i class="bi bi-plus"></i> Adicionar Livro (Com ID)
-    </button>
-    <button onclick="showUnauthorized()" class="btn btn-primary mb-3">
-        <i class="bi bi-plus"></i> Adicionar Livro (Com Select)
-    </button>
 
-    <script>
-        function showUnauthorized() {
-            alert('Acesso não autorizado. Contate o administrador.');
-        }
-    </script>
-@endcan
-
-
-    <table class="table table-striped">
+    <table class="table table-striped align-middle">
         <thead>
             <tr>
                 <th>ID</th>
+                <th>Capa</th>
                 <th>Título</th>
                 <th>Autor</th>
                 <th>Ações</th>
@@ -46,23 +31,24 @@
             @forelse($books as $book)
                 <tr>
                     <td>{{ $book->id }}</td>
+                    <td style="width: 60px;">
+                        @if($book->cover_image)
+                            <img src="{{ asset('storage/' . $book->cover_image) }}" alt="Capa do livro" style="max-width: 50px; max-height: 70px; object-fit: cover; border: 1px solid #ddd; padding: 2px;">
+                        @else
+                            <img src="https://thumbs.dreamstime.com/b/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available-236105299.jpg" alt="Capa padrão" style="max-width: 50px; max-height: 70px; object-fit: cover; border: 1px solid #ddd; padding: 2px;">
+                        @endif
+                    </td>
                     <td>{{ $book->title }}</td>
                     <td>{{ $book->author->name }}</td>
                     <td>
-                        <!-- Botão de Visualizar -->
                         <a href="{{ route('books.show', $book->id) }}" class="btn btn-info btn-sm">
                             <i class="bi bi-eye"></i> Visualizar
                         </a>
 
-                        <!-- Botão de Editar -->
-                        @can('update', App\Models\Book::class)
                         <a href="{{ route('books.edit', $book->id) }}" class="btn btn-primary btn-sm">
                             <i class="bi bi-pencil"></i> Editar
                         </a>
-                        @endcan
 
-                        <!-- Botão de Deletar -->
-                        @can('update', App\Models\Book::class)
                         <form action="{{ route('books.destroy', $book->id) }}" method="POST" style="display: inline;">
                             @csrf
                             @method('DELETE')
@@ -70,18 +56,16 @@
                                 <i class="bi bi-trash"></i> Deletar
                             </button>
                         </form>
-                        @endcan
                     </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="4">Nenhum livro encontrado.</td>
+                    <td colspan="5">Nenhum livro encontrado.</td>
                 </tr>
             @endforelse
         </tbody>
     </table>
 
-    <!-- Controles de Paginação -->
     <div class="d-flex justify-content-center">
         {{ $books->links() }}
     </div>

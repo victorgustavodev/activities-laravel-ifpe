@@ -11,7 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('books', function (Blueprint $table) {
+            $table->integer('published_year')->nullable();
             //
         });
     }
@@ -21,7 +22,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('books', function (Blueprint $table) {
             //
         });
     }

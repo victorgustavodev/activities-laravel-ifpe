@@ -22,8 +22,8 @@ class CategorySeeder extends Seeder
             'Viagem'
         ];
 
-        foreach ($categories as $categoryName) {
-            Category::firstOrCreate(['name' => $categoryName]);
+        foreach ($categories as $category) {
+            Category::firstOrCreate(['name' => $category]);
         }
     }
 }

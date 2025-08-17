@@ -1,24 +1,14 @@
+
+
 @extends('layouts.app')
 
 @section('content')
 <div class="container">
     <h1 class="my-4">Lista de Categorias</h1>
 
-    @can('create', App\Models\Category::class)
     <a href="{{ route('categories.create') }}" class="btn btn-success mb-3">
         <i class="bi bi-plus"></i> Adicionar Categoria
     </a>
-@else
-    <button onclick="showUnauthorized()" class="btn btn-success mb-3">
-        <i class="bi bi-plus"></i> Adicionar Categoria
-    </button>
-
-    <script>
-        function showUnauthorized() {
-            alert('Ação não autorizada.');
-        }
-    </script>
-@endcan
 
     @if(session('success'))
         <div class="alert alert-success">
@@ -46,14 +36,11 @@
                         </a>
 
                         <!-- Botão de Editar -->
-                        @can('update', App\Models\Category::class)
                         <a href="{{ route('categories.edit', $category) }}" class="btn btn-primary btn-sm">
                             <i class="bi bi-pencil"></i> Editar
                         </a>
-                        @endcan
 
                         <!-- Botão de Excluir -->
-                        @can('delete', App\Models\Category::class)
                         <form action="{{ route('categories.destroy', $category) }}" method="POST" style="display: inline;">
                             @csrf
                             @method('DELETE')
@@ -61,7 +48,6 @@
                                 <i class="bi bi-trash"></i> Excluir
                             </button>
                         </form>
-                        @endcan
                     </td>
                 </tr>
             @empty
@@ -73,3 +59,4 @@
     </table>
 </div>
 @endsection
+
